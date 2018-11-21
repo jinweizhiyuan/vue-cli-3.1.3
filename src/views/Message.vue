@@ -1,0 +1,67 @@
+<template>
+  <view-box>
+    <panel>
+      <a
+        slot="body"
+        v-for="(item, index) in list" 
+        :key="index"
+        :href="item.url" 
+        @click.prevent="onItemClick(item)" 
+        class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd" v-if="item.src">
+          <img class="weui-media-box__thumb" :src="item.src" @error="onImgError(item, $event)" alt="">
+        </div>
+        <div class="weui-media-box__bd">
+          <h4 class="weui-media-box__title" v-html="item.title"></h4>
+          <p class="weui-media-box__desc" v-html="item.desc"></p>
+        </div>
+        <div class="weui-media-box__hd">
+          <p class="weui-media-box__desc" v-html="item.time"></p>
+        </div>
+      </a>
+    </panel>
+  </view-box>
+
+  <!-- <view-box>
+    <flex-box v-for="(item, index) in list" :key="index">
+      <flex-item>{{ item.src }}</flex-item>
+      <flex-item>{{ item.title }}</flex-item>
+    </flex-box>
+  </view-box> -->
+</template>
+
+<script>
+import { ViewBox, Panel, Flexbox, FlexboxItem } from "vux";
+import logo from "@/assets/logo.png";
+
+export default {
+  components: {
+    "view-box": ViewBox,
+    Panel,
+    "flex-box": Flexbox,
+    "flex-item": FlexboxItem
+  },
+
+  data() {
+    return {
+      list: [
+        {
+          title: "张三",
+          desc: "领悟人生：走了啊",
+          url: "",
+          src: logo,
+          fallbackSrc: "",
+          time: '2018/11/2'
+        }
+      ]
+    };
+  },
+  
+  methods: {
+    onItemClick(){
+      console.log(arguments)
+    }
+  }
+};
+</script>
+
