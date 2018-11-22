@@ -4,16 +4,34 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
     routes: [{
-        path: '/',
-        name: 'home',
-        component: () => import('@/views/MainFrame.vue'),
-        children: [
-            {
-                path: '',
-                component: () => import('@/views/Message.vue')
-            }
-        ]
+        path: '',
+        name: 'root',
+        redirect: '/multi-part/message'
+    }, {
+        path: '/multi-part',
+        name: 'multi',
+        component: () => import('@/views/public/MainFrame.vue'),
+        children: [{
+            path: '',
+            redirect: 'message'
+        }, {
+            path: 'message',
+            component: () => import('@/views/Message.vue')
+        }, {
+            path: 'addrList',
+            component: () => import('@/views/AddrList.vue')
+        }, {
+            path: 'find',
+            component: () => import('@/views/Find.vue')
+        }, {
+            path: 'me',
+            component: () => import('@/views/Me.vue')
+        }]
     }]
 })
+
+router
+
+export default router;

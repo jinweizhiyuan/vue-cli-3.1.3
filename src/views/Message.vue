@@ -10,6 +10,7 @@
         class="weui-media-box weui-media-box_appmsg">
         <div class="weui-media-box__hd" v-if="item.src">
           <img class="weui-media-box__thumb" :src="item.src" @error="onImgError(item, $event)" alt="">
+          <sup class="sup"><badge text="1" /></sup>
         </div>
         <div class="weui-media-box__bd">
           <h4 class="weui-media-box__title" v-html="item.title"></h4>
@@ -31,15 +32,14 @@
 </template>
 
 <script>
-import { ViewBox, Panel, Flexbox, FlexboxItem } from "vux";
+import { ViewBox, Panel, Badge } from "vux";
 import logo from "@/assets/logo.png";
 
 export default {
   components: {
     "view-box": ViewBox,
     Panel,
-    "flex-box": Flexbox,
-    "flex-item": FlexboxItem
+    Badge
   },
 
   data() {
@@ -59,9 +59,20 @@ export default {
   
   methods: {
     onItemClick(){
-      console.log(arguments)
+      // console.log(arguments)
     }
   }
 };
 </script>
 
+<style lang="less" scoped>
+.weui-media-box__hd {
+  position: relative;
+}
+.sup {
+  position: absolute;
+  top: -0.5em;
+  right: -0.5em;
+  line-height: normal;
+}
+</style>
