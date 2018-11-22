@@ -32,6 +32,4 @@ let router = new Router({
     }]
 })
 
-router
-
 export default router;

@@ -11,6 +11,7 @@
 <script>
 import Header from "@/views/public/Header.vue";
 import Footer from "@/views/public/Footer.vue";
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -24,13 +25,24 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState({
+      histories: state => state.histories,
+      direction: state => stte.direction
+    })
+  },
+
   watch: {
     $route(to, from) {
-      const toDepth = to.path.split("/").length;
-      const fromDepth = from.path.split("/").length;
-      this.transitionName = toDepth < fromDepth ? "slide-right" : "slide-left";
-      console.log(this.transitionName);
+      let lastHistoryLen = this.histories.length
+      this.$store.commit('add_historiy', to.path)
+      this.transitionName = lastHistoryLen > this.histories.length ? "slide-right" : "slide-left"
+      this.$store.commit('add_direction', this.transitionName)
     }
+  },
+
+  beforeMount(){
+    this.$store.commit('add_historiy', this.$route.path)
   }
 };
 </script>

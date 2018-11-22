@@ -22,7 +22,7 @@ export default {
     },
     methods: {
         rightHandler: function(e) {
-            console.log(e)
+            // console.log(e)
         }
     },
     components: {
