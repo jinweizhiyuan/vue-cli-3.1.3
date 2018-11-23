@@ -12,23 +12,31 @@ let router = new Router({
     }, {
         path: '/multi-part',
         name: 'multi',
-        component: () => import('@/views/public/MainFrame.vue'),
+        component: () =>
+            import ('@/views/public/MainFrame.vue'),
         children: [{
             path: '',
             redirect: 'message'
         }, {
             path: 'message',
-            component: () => import('@/views/Message.vue')
+            component: () =>
+                import ('@/views/multipart/MessageList.vue')
         }, {
             path: 'addrList',
-            component: () => import('@/views/AddrList.vue')
+            component: () =>
+                import('@/views/multipart/AddrList.vue')
         }, {
             path: 'find',
-            component: () => import('@/views/Find.vue')
+            component: () =>
+                import('@/views/multipart/Find.vue')
         }, {
             path: 'me',
-            component: () => import('@/views/Me.vue')
+            component: () =>
+                import('@/views/multipart/Me.vue')
         }]
+    }, {
+        path: '/single/message',
+        component: () => import('@/views/single/Message.vue')
     }]
 })
 

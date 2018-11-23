@@ -6,7 +6,20 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     direction: 'slide-left',
-    histories: []
+    histories: [] || {
+      '/': {
+        'multi-part': {
+          'messageList': {
+
+          }
+        },
+        'single': {
+          'message': {
+
+          }
+        }
+      }
+    }
   },
   mutations: {
     add_direction(state, palyload) {

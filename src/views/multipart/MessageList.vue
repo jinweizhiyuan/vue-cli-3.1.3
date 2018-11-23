@@ -34,6 +34,7 @@
 <script>
 import { ViewBox, Panel, Badge } from "vux";
 import logo from "@/assets/logo.png";
+import { debug } from 'util';
 
 export default {
   components: {
@@ -58,8 +59,8 @@ export default {
   },
   
   methods: {
-    onItemClick(){
-      // console.log(arguments)
+    onItemClick: function(){
+      this.$router.push('/single/message')
     }
   }
 };
@@ -74,5 +75,8 @@ export default {
   top: -0.5em;
   right: -0.5em;
   line-height: normal;
+}
+.weui-media-box__desc {
+  overflow: visible;
 }
 </style>
