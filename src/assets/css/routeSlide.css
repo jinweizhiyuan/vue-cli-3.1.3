@@ -1,59 +1,67 @@
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+    position: absolute !important;
+    /* top: 46px; */
+    left: 0;
+    width: 100%;
+}
+
 .slide-left-enter-active {
-    animation: in .3s linear;
-    -webkit-animation: in .3s linear;
+    animation: in .5s;
+    -webkit-animation: in .5s;
+    will-change: transform;
 }
 
 .slide-left-leave-active {
-    animation: out .3s linear;
-    -webkit-animation: out .3s linear;
+    animation: out .5s;
+    -webkit-animation: out .5s;
+    will-change: transform;
 }
 
 .slide-right-enter-active {
-    animation: out .3s linear reverse;
-    -webkit-animation: out .3s linear reverse;
+    animation: out .5s reverse;
+    -webkit-animation: out .5s reverse;
+    will-change: transform;
 }
 
 .slide-right-leave-active {
-    animation: in .3s linear reverse;
-    -webkit-animation: in .3s linear reverse;
+    animation: in .3s reverse;
+    -webkit-animation: in .3s reverse;
+    will-change: transform;
 }
 
 @keyframes in {
     0% {
         transform: translateX(100%);
+        opacity: 0;
     }
 
     50% {
-        transform: translateX(50%)
+        transform: translateX(50%);
+        opacity: 0.5;
     }
 
-    100% {
-        transform: translateX(0%)
+        100% {
+            transform: translateX(0%)    ;
+            opacity: 1;
     }
 }
 
 @keyframes out {
     0% {
         transform: translateX(0%);
-        -webkit-transform: translateX(0%);
-        -moz-transform: translateX(0%);
-        -ms-transform: translateX(0%);
-        -o-transform: translateX(0%);
-}
+        opacity: 1;
+    }
 
     50% {
         transform: translateX(-50%);
-        -webkit-transform: translateX(-50%);
-        -moz-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        -o-transform: translateX(-50%);
+        opacity: 0.5;
     }
 
     100% {
         transform: translateX(-100%);
-        -webkit-transform: translateX(-100%);
-        -moz-transform: translateX(-100%);
-        -ms-transform: translateX(-100%);
-        -o-transform: translateX(-100%);
+        opacity: 1;
     }
 }

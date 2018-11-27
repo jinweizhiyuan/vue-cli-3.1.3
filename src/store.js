@@ -22,7 +22,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    add_direction(state, palyload) {
+    update_direction(state, palyload) {
       state.direction = palyload
     },
     add_historiy(state, palyload) {

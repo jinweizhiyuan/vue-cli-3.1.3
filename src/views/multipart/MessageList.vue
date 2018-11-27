@@ -1,5 +1,5 @@
 <template>
-  <view-box>
+  <!-- <view-box> -->
     <panel>
       <a
         slot="body"
@@ -21,7 +21,7 @@
         </div>
       </a>
     </panel>
-  </view-box>
+  <!-- </view-box> -->
 
   <!-- <view-box>
     <flex-box v-for="(item, index) in list" :key="index">
@@ -32,13 +32,12 @@
 </template>
 
 <script>
-import { ViewBox, Panel, Badge } from "vux";
+import { Panel, Badge } from "vux";
 import logo from "@/assets/logo.png";
-import { debug } from 'util';
 
 export default {
   components: {
-    "view-box": ViewBox,
+    // "view-box": ViewBox,
     Panel,
     Badge
   },
@@ -60,7 +59,7 @@ export default {
   
   methods: {
     onItemClick: function(){
-      this.$router.push('/single/message')
+      this.$router.push('/multi-part/message/messageInfo')
     }
   }
 };

@@ -43,4 +43,7 @@ export default {
 .weui-grid__icon + .weui-grid__label {
   margin-top: 0;
 }
+.weui-grids{
+  background-color: #fff;
+}
 </style>

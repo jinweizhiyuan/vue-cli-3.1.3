@@ -1,7 +1,7 @@
 <template>
     <div>
         <Header></Header>
-        <transition :name="direction" mode="out-in">
+        <transition :name="direction">
             <router-view />
         </transition>
         <Footer></Footer>

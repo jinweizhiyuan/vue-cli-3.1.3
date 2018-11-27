@@ -1,6 +1,6 @@
 <template>
     <tabbar>
-        <tab-item :selected="selected == 0" :link="links[0]">
+        <tab-item :selected="selected == 0" :link="links[0]" badge="2">
             <i slot="icon" class="fa fa-comments-o" />
             <span slot="label">微信</span>
         </tab-item>

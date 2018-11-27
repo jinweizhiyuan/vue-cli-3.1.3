@@ -6,7 +6,7 @@
       <router-link to="/header">Header</router-link>
     </div> -->
     
-    <transition :name="direction" mode="out-in">
+    <transition :name="direction">
       <router-view/>
     </transition>
   </view-box>
