@@ -1,14 +1,14 @@
 <template>
   <box gap="10px">
-    <group title="用户登录">
-      <x-input label-width="3em" title="用户名" v-model.trim="userName"></x-input>
-      <x-input label-width="3em" title="密码" type="password" v-model.trim="pwd"></x-input>
+    <group title="用户注册">
+      <x-input label-width="3em" placeholder="用户名" v-model.trim="userName"></x-input>
+      <x-input label-width="3em" placeholder="密码" type="password" v-model.trim="pwd"></x-input>
     </group>
     <div class="c-f">
         <router-link class="forget" to="/regist">注册用户</router-link>
         <!-- <router-link class="forget" to="">忘记密码</router-link> -->
     </div>
-    <x-button type="primary" @click.native="login">登录</x-button>
+    <x-button type="primary" @click.native="login">注册</x-button>
   </box>
 </template>
 
@@ -29,12 +29,12 @@ export default {
   methods: {
     login: function() {
       if (this.userName && this.pwd) {
-        const socket = io("http://localhost:3000/");
-        this.axios.post('http://localhost:3000/api/login', {
+        this.axios.post('http://localhost:3000/api/regist', {
             userName: this.userName,
             password: this.pwd
         }).then(function(response) {
             console.log(response);
+            this.$route.push('/login')
         })
       } else {
         AlertModule.show({

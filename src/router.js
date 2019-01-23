@@ -9,7 +9,7 @@ let router = new Router({
   routes: [{
     path: '',
     name: 'root',
-    redirect: '/multi-part/message'
+    redirect: '/login'
   }, {
     path: '/multi-part',
     name: 'multi',
@@ -38,6 +38,12 @@ let router = new Router({
   }, {
     path: '/multi-part/message/messageInfo',
     component: () => import('@/views/single/MessageInfo.vue')
+  }, {
+    path: '/login',
+    component: () => import('@/views/single/Login.vue')
+  }, {
+    path: '/regist',
+    component: () => import('@/views/single/Regist.vue')
   }]
 })
 
