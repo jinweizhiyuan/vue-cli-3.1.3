@@ -28,13 +28,19 @@ export default {
 
   methods: {
     login: function() {
+      var vm = this
       if (this.userName && this.pwd) {
-        const socket = io("http://localhost:3000/");
+        
         this.axios.post('http://localhost:3000/api/login', {
             userName: this.userName,
             password: this.pwd
         }).then(function(response) {
-            console.log(response);
+            console.log({userName:vm.userName, password:vm.pwd});
+            const socket = io("http://localhost:3000/");
+            socket.on('connect', () => {
+              console.log('connect')
+              socket.emit('login', {userName:vm.userName, password:vm.pwd})
+            })
         })
       } else {
         AlertModule.show({

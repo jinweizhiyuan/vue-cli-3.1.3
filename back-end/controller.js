@@ -15,7 +15,7 @@ function addMapping(router, mapping) {
 
 function addController(router, controllers_dir) {
     controllers_dir = path.join(__dirname, controllers_dir)
-    console.log(controllers_dir)
+    // console.log(controllers_dir)
     let files = fs.readdirSync(controllers_dir)
     let jsfiles = files.filter((file) => {
         return file.endsWith('.js')
