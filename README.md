@@ -1,3 +1,15 @@
+# 功能说明
+
+验证用户登录成功后，提供聊天功能
+
+# 使用技术
+nodejs、soket.io、koa、vue、vuex、vue-router
+
+# 运行说明
+后端启动 `node server.js`
+
+前端启动 `npm run serve`
+
 # vue-cli-3.1.3
 
 ## Project setup
