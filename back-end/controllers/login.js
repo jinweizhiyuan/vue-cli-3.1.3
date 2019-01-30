@@ -2,12 +2,12 @@ const mongoClient = require('mongodb').MongoClient;
 
 async function login(ctx, next) {
     const userTable = await ctx.mongo.db().collection('user')
-    const result = await userTable.find(ctx.response.body).toArray()
+    const result = await userTable.find(ctx.request.body).toArray()
     let ret
     if (result.length > 0) {
         ret = {code: '1000', message: 'success'}
     } else {
-        ret = {code: '1002', message: '用户不存在'}
+        ret = {code: '1002', message: '用户或密码不存在'}
     }
     ctx.response.body = ret
     next()

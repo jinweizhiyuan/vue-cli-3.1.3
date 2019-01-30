@@ -8,29 +8,17 @@ const server = require('http').Server(app.callback());
 const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
-    // console.log(socket);
-})
-
-io.on('login', (data) => {
-    console.log(data)
-    let res = ctx.mongo.db().find(data).toArray()
-    if (res.length <= 0) io.close(() => {console.log('socket closed')})
+    console.log('connection');
+    socket.on('login', (data) => {
+        // console.log(data, new Date())
+        // let res = ctx.mongo.db().find(data).toArray()
+        // if (res.length <= 0) io.close(() => {console.log('socket closed')})
+    })
 })
 
 app.use(cors())
 app.use(static('dist'), {extensions: ['html', 'css', 'js', 'img', 'png']})
 app.use(bodyParser())
-// app.use(mongo({
-//     // host: '127.0.0.1',
-//     // port: 27017,
-//     // db: 'chat',
-//     // user: 'admin',
-//     // pass: 'admin',
-//     // max: 100,
-//     // min: 1,
-//     // acquireTimeoutMillis: 1000
-//     uri: 'mongodb://admin:admin@127.0.0.1:27017/chat'
-// }))
 app.use(mongoDriver({
     url: '127.0.0.1',
     port: 27017,
