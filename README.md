@@ -3,7 +3,7 @@
 验证用户登录成功后，提供聊天功能
 
 # 使用技术
-nodejs、soket.io、koa、vue、vuex、vue-router
+nodejs、soket.io、koa、vue、vuex、vue-router、vux
 
 # 运行说明
 后端启动 `node server.js`
