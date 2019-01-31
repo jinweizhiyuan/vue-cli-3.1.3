@@ -11,7 +11,25 @@ io.on('connection', (socket) => {
     console.log('connection');
     socket.on('login', (data) => {
         let MongoClient = require('mongodb').MongoClient;
-        MongoClient.connect('mongodb://admin:admin@127.0.0.1:27107/chat')
+        MongoClient.connect('mongodb://127.0.0.1:27017/chat', {
+            useNewUrlParser: true,
+            auth: {
+                user: 'admin',
+                password: 'admin'
+            },
+            authSource: 'admin',
+            authMechanism: 'DEFAULT'
+        }).then(async function (client) {
+            var result = await client.db().collection('user').find(data).toArray()
+            console.log(result)
+            if (result) {
+                console.log('连接成功')
+            } else {
+                console.log('用户不存在')
+            }
+        }).catch(function () {
+            console.log('database connection error')
+        })
         // console.log(data, new Date())
         // let res = ctx.mongo.db().find(data).toArray()
         // if (res.length <= 0) io.close(() => {console.log('socket closed')})x
@@ -19,7 +37,9 @@ io.on('connection', (socket) => {
 })
 
 app.use(cors())
-app.use(static('dist'), {extensions: ['html', 'css', 'js', 'img', 'png']})
+app.use(static('dist'), {
+    extensions: ['html', 'css', 'js', 'img', 'png']
+})
 app.use(bodyParser())
 app.use(mongoDriver({
     url: '127.0.0.1',
