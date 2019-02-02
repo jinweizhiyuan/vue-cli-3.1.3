@@ -5,6 +5,9 @@
 # 使用技术
 nodejs、soket.io、koa、vue、vuex、vue-router、vux
 
+# 数据库
+mongodb
+
 # 运行说明
 后端启动 `node server.js`
 

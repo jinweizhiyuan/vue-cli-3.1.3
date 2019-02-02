@@ -1,8 +1,8 @@
 <template>
   <box gap="10px">
     <group title="用户登录">
-      <x-input label-width="3em" title="用户名" v-model.trim="userName"></x-input>
-      <x-input label-width="3em" title="密码" type="password" v-model.trim="pwd"></x-input>
+      <x-input label-width="3em" palceholder="用户名" v-model.trim="userName"></x-input>
+      <x-input label-width="3em" palceholder="密码" type="password" v-model.trim="pwd"></x-input>
     </group>
     <div class="c-f">
         <router-link class="forget" to="/regist">注册用户</router-link>
@@ -15,6 +15,7 @@
 <script>
 import { XInput, Group, XButton, AlertModule, Box, CellBox } from "vux";
 import io from "socket.io-client";
+import { mapMutations } from 'vuex'
 
 export default {
   data() {
@@ -37,9 +38,19 @@ export default {
         }).then(function(response) {
             // console.log({userName:vm.userName, password:vm.pwd});
             const socket = io("http://localhost:3000/");
-            socket.on('connect', () => {
-              console.log('connect')
+            socket.on('connect', function() {
+              vm.set_socket(socket)
               socket.emit('login', {userName:vm.userName, password:vm.pwd})
+            })
+            socket.on('init-login', (data) => {
+              console.log(data)
+              vm.set_currentUser(data.data)
+              vm.$router.push('/multi-part')
+            })
+            
+            socket.on('sync-user', (data) => {
+              console.log(data)
+              vm.add_user(data.data)
             })
         })
       } else {
@@ -48,7 +59,8 @@ export default {
           content: "请输入用户名和密码"
         });
       }
-    }
+    },
+    ...mapMutations(['set_socket', 'set_currentUser', 'add_user'])
   }
 };
 </script>

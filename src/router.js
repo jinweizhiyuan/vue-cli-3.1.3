@@ -48,10 +48,20 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  
   let toDepth = to.path.split('/').length
+
+  // 刷新后socket丢失
+  let toPath
+  if (!store.state.socket && to.path != '/login') {
+    toPath = '/login'
+    toDepth = toPath.split('/').length
+  }
+
   let fromDepth = from.path.split('/').length
   store.commit('update_direction', toDepth < fromDepth ? 'slide-right' : 'slide-left')
-  next()
+  next(toPath)
+  
 })
 
 export default router

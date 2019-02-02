@@ -3,7 +3,7 @@
     <panel>
       <a
         slot="body"
-        v-for="(item, index) in list" 
+        v-for="(item, index) in users" 
         :key="index"
         :href="item.url" 
         @click.prevent="onItemClick(item)" 
@@ -13,7 +13,7 @@
           <sup class="sup"><badge text="1" /></sup>
         </div>
         <div class="weui-media-box__bd">
-          <h4 class="weui-media-box__title" v-html="item.title"></h4>
+          <h4 class="weui-media-box__title" v-html="item.userName"></h4>
           <p class="weui-media-box__desc" v-html="item.desc"></p>
         </div>
         <div class="weui-media-box__hd">
@@ -32,8 +32,9 @@
 </template>
 
 <script>
-import { Panel, Badge } from "vux";
-import logo from "@/assets/logo.png";
+import { Panel, Badge } from "vux"
+import logo from "@/assets/logo.png"
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   components: {
@@ -60,7 +61,19 @@ export default {
   methods: {
     onItemClick: function(){
       this.$router.push('/multi-part/message/messageInfo')
-    }
+    },
+    ...mapMutations(['add_user'])
+  },
+
+  computed: {
+    ...mapState(['socket', 'users'])
+  },
+
+  mounted() {
+    this.socket.on('user-online', (data) => {
+      // console.log(data)
+      this.add_user(data.data)
+    })
   }
 };
 </script>
