@@ -1,8 +1,8 @@
 <template>
   <box gap="10px">
     <group title="用户登录">
-      <x-input label-width="3em" palceholder="用户名" v-model.trim="userName"></x-input>
-      <x-input label-width="3em" palceholder="密码" type="password" v-model.trim="pwd"></x-input>
+      <x-input label-width="3em" placeholder="用户名" v-model.trim="userName"></x-input>
+      <x-input label-width="3em" placeholder="密码" type="password" v-model.trim="pwd"></x-input>
     </group>
     <div class="c-f">
         <router-link class="forget" to="/regist">注册用户</router-link>
@@ -42,6 +42,7 @@ export default {
               vm.set_socket(socket)
               socket.emit('login', {userName:vm.userName, password:vm.pwd})
             })
+
             socket.on('init-login', (data) => {
               console.log(data)
               vm.set_currentUser(data.data)
@@ -51,7 +52,16 @@ export default {
             socket.on('sync-user', (data) => {
               console.log(data)
               vm.add_user(data.data)
+              
             })
+          
+            window.onbeforeunload = function () {
+              return "离开后用户将自动下线！";
+            };
+            
+            window.onunload = function() {
+              socket.close()
+            }
         })
       } else {
         AlertModule.show({

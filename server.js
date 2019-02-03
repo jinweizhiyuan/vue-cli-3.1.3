@@ -82,6 +82,10 @@ io.on('connection', (socket) => {
                 // 发送用户上线通知
                 ret.message = '用户上线'
                 socket.broadcast.emit('user-online', ret)
+
+                socket.on('disconnect', () => {
+                    console.log('socket close')
+                })
             } else {
                 console.log('用户不存在')
                 io.close()
@@ -98,6 +102,7 @@ io.on('connection', (socket) => {
         // let res = ctx.mongo.db().find(data).toArray()
         // if (res.length <= 0) io.close(() => {console.log('socket closed')})x
     })
+    
 })
 
 app.use(cors())
