@@ -20,7 +20,7 @@ async function regist(ctx, next) {
     if (result.length > 0) {
         ret = {code: '1001', message: '用户已存在'}
     } else {
-        let result = await userTable.insert({userName: ctx.request.body.userName, password: ctx.request.body.password})
+        let result = await userTable.insert({userName: ctx.request.body.userName, password: ctx.request.body.password, portrait: ctx.request.body.portrait, online:0})
         ret = {code: '1000', message: '注册成功'}
     }
     ctx.response.body = ret

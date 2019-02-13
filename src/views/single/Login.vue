@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { XInput, Group, XButton, AlertModule, Box, CellBox } from "vux";
+import { XInput, Group, XButton, AlertModule, Box } from "vux";
 import io from "socket.io-client";
 import { mapMutations } from 'vuex'
 
@@ -25,7 +25,7 @@ export default {
     };
   },
 
-  components: { XInput, Group, XButton, Box, CellBox },
+  components: { XInput, Group, XButton, Box },
 
   methods: {
     login: function() {
@@ -44,13 +44,13 @@ export default {
             })
 
             socket.on('init-login', (data) => {
-              console.log(data)
+              // console.log(data)
               vm.set_currentUser(data.data)
               vm.$router.push('/multi-part')
             })
             
             socket.on('sync-user', (data) => {
-              console.log(data)
+              // console.log(data)
               vm.add_user(data.data)
               
             })

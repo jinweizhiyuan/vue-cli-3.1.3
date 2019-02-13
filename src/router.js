@@ -44,6 +44,10 @@ let router = new Router({
   }, {
     path: '/regist',
     component: () => import('@/views/single/Regist.vue')
+  }, {
+    path: '/create-group',
+    // todo 新建页面
+    component: () => import('')
   }]
 })
 
@@ -53,7 +57,7 @@ router.beforeEach((to, from, next) => {
 
   // 刷新后socket丢失
   let toPath
-  if (!store.state.socket && to.path != '/login') {
+  if (!store.state.socket && (to.path != '/login' && to.path != '/regist')) {
     toPath = '/login'
     toDepth = toPath.split('/').length
   }

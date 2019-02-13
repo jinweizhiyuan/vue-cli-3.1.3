@@ -3,6 +3,11 @@
     <group title="用户注册">
       <x-input label-width="3em" placeholder="用户名" v-model.trim="userName"></x-input>
       <x-input label-width="3em" placeholder="密码" type="password" v-model.trim="pwd"></x-input>
+      <checker v-model="portrait" radio-required default-item-class="demo1-item weui-cell" selected-item-class="demo1-item-selected">
+        <checker-item v-for="p in portraits" :key="p" :value="p">
+          <img :src="p" height="60">
+        </checker-item>
+      </checker>
     </group>
     <div class="c-f">
         <router-link class="forget" to="/regist">注册用户</router-link>
@@ -13,27 +18,36 @@
 </template>
 
 <script>
-import { XInput, Group, XButton, AlertModule, Box, CellBox } from "vux";
-import io from "socket.io-client";
+import { XInput, Group, AlertModule, Box, XButton, Checker, CheckerItem } from "vux"
+import io from "socket.io-client"
+import { mapState } from 'vuex'
 
 export default {
   data() {
     return {
       userName: "",
-      pwd: ""
+      pwd: "",
+      portrait: ""
     };
   },
 
-  components: { XInput, Group, XButton, Box, CellBox },
+  computed: {...mapState(['portraits'])},
+
+  components: { XInput, Group, Box, XButton, Checker, CheckerItem },
 
   methods: {
     login: function() {
       var vm = this
-      if (this.userName && this.pwd) {
+      if (this.userName && this.pwd && this.portrait) {
         this.axios.post('http://localhost:3000/api/regist', {
             userName: this.userName,
-            password: this.pwd
+            password: this.pwd,
+            portrait: this.portrait
         }).then(function(response) {
+          vm.$vux.toast.show({
+            text: '注册成功',
+            type: 'success'
+          })
             vm.$router.push('/login')
         })
       } else {
@@ -54,5 +68,13 @@ export default {
         color: .8em;
         color: grey;
     }
+}
+
+.demo1-item {
+  border: 1px solid #ececec;
+  // padding: 5px 15px;
+}
+.demo1-item-selected {
+  border: 1px solid green;
 }
 </style>

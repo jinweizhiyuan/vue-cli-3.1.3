@@ -1,42 +1,77 @@
 <template>
+<div>
+    <x-header :title="user.userName" :left-options="{backText:''}" :right-options="{showMore:true}" @click-click-more="moreHandler" />
     <view-box class="chat-body max-view-box">
-        <x-header :title="title" :left-options="{backText:''}" :right-options="{showMore:true}" @click-click-more="moreHandler" />
         <ul class="chat-list">
-            <li>
+            <!-- <li>
                 <span class="icon"><img :src="icon1" /></span>
                 <div>今天吃了吗</div>
             </li>
             <li class="self">
                 <span class="icon"><img :src="icon2" /></span>
                 <div>刚刚吃过行饭</div>
+            </li> -->
+
+            <li v-for="(obj, index) in receiveMsg" :key="index" :class="{self: obj.self}">
+                <span class="icon"><img :src="obj.self ? currentUser.portrait : user.portrait" /></span>
+                <div>{{ obj.message }}</div>
             </li>
         </ul>
     </view-box>
+    <group class="footer">
+        <x-input type="text" placeholder="请输入消息后回车" v-model="msg" @on-enter="sendMsg"></x-input>
+    </group>
+</div>
 </template>
 
 <script>
-import { ViewBox, XHeader } from "vux";
-import icon1 from '@/assets/logo.png'
-import icon2 from '@/assets/icon.jpg'
+import { ViewBox, XHeader, XInput, Group } from "vux";
+import { mapState, mapGetters, mapMutations } from 'vuex'
+// import icon1 from '@/assets/logo.png'
+// import icon2 from '@/assets/icon.jpg'
 
 export default {
     components: {
         'view-box': ViewBox,
-        'x-header': XHeader
+        'x-header': XHeader,
+        XInput,
+        Group
     },
 
     data() {
         return {
-            title: '张三',
-            icon1,
-            icon2
+           user:'',
+           msg:''
+        }
+    },
+
+    computed: {
+        ...mapState(['broadcast', 'currentUser', 'socket']),
+        ...mapGetters(['get_user_by_name']),
+        receiveMsg() {
+            return this.broadcast[this.user.userName]
         }
     },
 
     methods: {
-        moreHandler(){
+        ...mapMutations(['add_message']),
+        moreHandler() {
             
+        },
+        sendMsg(val) {
+            let msg = {
+                from: this.currentUser.userName,
+                to: this.user.userName,
+                message:val
+            }
+            this.socket.send(msg)
+            this.add_message(msg)
+            this.msg = '';
         }
+    },
+    created(){
+        let userName = this.$route.query.userName
+        this.user = this.get_user_by_name(userName)
     }
 };
 </script>
@@ -82,7 +117,7 @@ export default {
             border-right-color: white;
             border-style: solid;
         }
-        &:nth-child(even) > div:before {
+        &.self > div:before {
             left: auto;
             right: -1em;
             border-color: transparent;
@@ -90,4 +125,19 @@ export default {
         }
     }
 }
+// .weui-tabbar {
+//     display:block;;
+// }
+
 </style>
+
+<style lang="less">
+.footer {
+    height: 53px;
+    overflow: hidden;
+    & > div {
+        margin: 0
+    }
+}
+</style>
+

@@ -1,6 +1,6 @@
 <template>
     <tabbar>
-        <tab-item :selected="selected == 0" :link="links[0]" badge="2">
+        <tab-item :selected="selected == 0" :link="links[0]" :badge="message_count">
             <i slot="icon" class="fa fa-comments-o" />
             <span slot="label">微信</span>
         </tab-item>
@@ -21,6 +21,7 @@
 
 <script>
 import {Tabbar, TabbarItem} from 'vux'
+import { mapGetters } from 'vuex'
 
 export default {
     components: {
@@ -43,7 +44,8 @@ export default {
             curLink = curLink[curLink.length - 1]
             let index = this.links.findIndex(v => v==curLink)
             return index;
-        }
+        },
+        ...mapGetters(['message_count'])
     }
 
     // ,watch: {
