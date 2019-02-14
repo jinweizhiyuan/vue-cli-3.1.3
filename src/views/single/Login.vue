@@ -37,7 +37,7 @@ export default {
             password: this.pwd
         }).then(function(response) {
             // console.log({userName:vm.userName, password:vm.pwd});
-            const socket = io("http://localhost:3000/");
+            const socket = io("http://localhost:3000/", {reconnection:false});
             socket.on('connect', function() {
               vm.set_socket(socket)
               socket.emit('login', {userName:vm.userName, password:vm.pwd})

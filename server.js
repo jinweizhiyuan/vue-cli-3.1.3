@@ -48,21 +48,22 @@ function makeResult(data, opt) {
 }
 
 let socketMap = new Map()
+let MongoClient = require('mongodb').MongoClient;
+let mongodbConfig = ['mongodb://127.0.0.1:27017/chat', {
+    useNewUrlParser: true,
+    auth: {
+        user: 'admin',
+        password: 'admin'
+    },
+    authSource: 'admin',
+    authMechanism: 'DEFAULT'
+}]
 io.on('connection', (socket) => {
     console.log('connection');
 
     socket.on('login', (data) => {
-        let MongoClient = require('mongodb').MongoClient;
-        MongoClient.connect('mongodb://127.0.0.1:27017/chat', {
-            useNewUrlParser: true,
-            auth: {
-                user: 'admin',
-                password: 'admin'
-            },
-            authSource: 'admin',
-            authMechanism: 'DEFAULT'
-        }).then(async function (client) {
-            let coll = await client.db().collection('user')
+        MongoClient.connect(...mongodbConfig).then(async function (client) {
+            coll = await client.db().collection('user')
             let result = await coll.find(data, {
                 projection: {
                     userName: 1,
@@ -124,6 +125,10 @@ io.on('connection', (socket) => {
     })
     
 })
+io.on('close', function() {
+    console.log('close')
+    console.log(arguments)
+})
 
 app.use(cors())
 app.use(static('dist'), {
@@ -144,8 +149,16 @@ app.use(mongoDriver({
 }))
 
 let controller = require('./back-end/controller.js')
-app.use(controller());
+app.use(controller())
 
 server.listen(3000, () => {
     console.log('listening on 3000')
-});
+})
+
+process.on('SIGINT', () => {
+    MongoClient.connect(...mongodbConfig).then(async (client) => {
+        await client.db().collection('user').updateMany({}, {$set:{online:0}})
+        process.exit()
+    })
+    
+})

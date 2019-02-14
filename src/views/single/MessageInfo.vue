@@ -123,6 +123,9 @@ export default {
             border-color: transparent;
             border-left-color: white;
         }
+        &.self > div {
+            background-color: #A1E760;
+        }
     }
 }
 // .weui-tabbar {
