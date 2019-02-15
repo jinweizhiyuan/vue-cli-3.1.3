@@ -71,16 +71,16 @@ export default {
   },
 
   mounted() {
-    this.socket.on('user-online', (data) => {
+    this.socket.once('user-online', (data) => {
       // console.log(data)
       this.add_user(data.data)
     })
 
-    this.socket.on('user-offline', (data) => {
+    this.socket.once('user-offline', (data) => {
       this.remove_user(data.data)
     })
 
-    this.socket.on('message', (data) => {
+    this.socket.once('message', (data) => {
       this.add_message(data)
     })
   }

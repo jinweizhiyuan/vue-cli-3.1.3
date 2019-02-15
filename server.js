@@ -5,7 +5,9 @@ const bodyParser = require('koa-body-parser');
 const mongoDriver = require('koa-mongo-driver')
 const app = new Koa();
 const server = require('http').Server(app.callback());
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+    origins: '*'
+});
 
 let {Console} = require('console')
 let cs = new Console(process.stdout, process.stderr)
@@ -151,8 +153,9 @@ app.use(mongoDriver({
 let controller = require('./back-end/controller.js')
 app.use(controller())
 
-server.listen(3000, () => {
-    console.log('listening on 3000')
+server.listen(3000, (c) => {
+    let address = getIPAdress()
+    console.log('listening on %s 3000', address)
 })
 
 process.on('SIGINT', () => {
@@ -162,3 +165,17 @@ process.on('SIGINT', () => {
     })
     
 })
+
+function getIPAdress() {
+    const os = require('os')
+    var interfaces = os.networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
+            }
+        }
+    }
+}

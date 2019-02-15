@@ -65,6 +65,7 @@ export default new Vuex.Store({
         payload.from = payload.to
         payload.to = _from
         payload.self = true
+        payload.isRead = true
       }
       
       let from = payload.from,
@@ -81,7 +82,7 @@ export default new Vuex.Store({
 
       let user= state.users[index]
 
-      if (user) {
+      if (user && !payload.isRead) {
         if (!user.msgCount) {
           user.msgCount = 1
         } else [
@@ -91,6 +92,12 @@ export default new Vuex.Store({
 
       // 触发响应式属性
       Vue.set(state.users, index, user)
+    },
+    update_user(state, payload) {
+      let index = state.users.findIndex(u => {
+        if (u.userName == payload.userName) return true
+      })
+      Vue.set(state.users, index, payload)
     }
   },
   getters: {
@@ -110,7 +117,6 @@ export default new Vuex.Store({
       }
       
     },
-
     message_count(state) {
       let count = 0;
       state.users.forEach(user => {

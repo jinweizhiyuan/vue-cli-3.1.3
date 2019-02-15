@@ -14,7 +14,7 @@
 
             <li v-for="(obj, index) in receiveMsg" :key="index" :class="{self: obj.self}">
                 <span class="icon"><img :src="obj.self ? currentUser.portrait : user.portrait" /></span>
-                <div>{{ obj.message }}</div>
+                <div>{{ printMsg(obj) }}</div>
             </li>
         </ul>
     </view-box>
@@ -54,7 +54,7 @@ export default {
     },
 
     methods: {
-        ...mapMutations(['add_message']),
+        ...mapMutations(['add_message', 'update_user']),
         moreHandler() {
             
         },
@@ -62,16 +62,33 @@ export default {
             let msg = {
                 from: this.currentUser.userName,
                 to: this.user.userName,
-                message:val
+                message:val,
+                isRead: false
             }
             this.socket.send(msg)
             this.add_message(msg)
             this.msg = '';
+            console.log('sendMsg')
+        },
+        printMsg(o) {
+            o.isRead = true
+            return o.message
         }
     },
     created(){
         let userName = this.$route.query.userName
         this.user = this.get_user_by_name(userName)
+        this.user.msgCount = 0
+        this.update_user(this.user)
+    },
+    watch: {
+        receiveMsg(){
+            console.log(arguments)
+        let userName = this.$route.query.userName
+        this.user = this.get_user_by_name(userName)
+        this.user.msgCount = 0
+        this.update_user(this.user)
+        }
     }
 };
 </script>
