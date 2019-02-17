@@ -4,15 +4,14 @@ import VueAxios from 'vue-axios'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import 'vux/dist/vux.min.js'
-import 'vux/dist/vux.min.css'
+import { ToastPlugin } from 'vux'
 
 import 'font-awesome/css/font-awesome.min.css'
 import '@/assets/css/public.css'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
-Vue.use(vux.vuxToastPlugin)
+Vue.use(ToastPlugin)
 
 new Vue({
   router,
