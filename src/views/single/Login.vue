@@ -32,12 +32,12 @@ export default {
       var vm = this
       if (this.userName && this.pwd) {
         
-        this.axios.post('http://localhost:3000/api/login', {
+        this.axios.post('api/login', {
             userName: this.userName,
             password: this.pwd
         }).then(function(response) {
             // console.log({userName:vm.userName, password:vm.pwd});
-            const socket = io("http://localhost:3000/", {reconnection:false});
+            const socket = io("", {reconnection:false});
             socket.on('connect', function() {
               vm.set_socket(socket)
               socket.emit('login', {userName:vm.userName, password:vm.pwd})
@@ -53,6 +53,19 @@ export default {
               // console.log(data)
               vm.add_user(data.data)
               
+            })
+
+            socket.on('user-online', (data) => {
+              // console.log(data)
+              vm.add_user(data.data)
+            })
+
+            socket.on('user-offline', (data) => {
+              vm.remove_user(data.data)
+            })
+
+            socket.on('message', (data) => {
+              vm.add_message(data)
             })
           
             window.onbeforeunload = function () {
@@ -70,7 +83,7 @@ export default {
         });
       }
     },
-    ...mapMutations(['set_socket', 'set_currentUser', 'add_user'])
+    ...mapMutations(['set_socket', 'set_currentUser', 'add_user', 'add_user', 'remove_user', 'add_message'])
   }
 };
 </script>

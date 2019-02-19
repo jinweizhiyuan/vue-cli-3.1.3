@@ -61,28 +61,12 @@ export default {
   methods: {
     onItemClick: function(item, event){
       this.$router.push({path:'/multi-part/message/messageInfo', query:item})
-    },
-    ...mapMutations(['add_user', 'remove_user', 'add_message'])
+    }
   },
 
   computed: {
     ...mapState(['socket', 'users']),
     ...mapGetters(['user_messsage_count'])
-  },
-
-  mounted() {
-    this.socket.once('user-online', (data) => {
-      // console.log(data)
-      this.add_user(data.data)
-    })
-
-    this.socket.once('user-offline', (data) => {
-      this.remove_user(data.data)
-    })
-
-    this.socket.once('message', (data) => {
-      this.add_message(data)
-    })
   }
 };
 </script>

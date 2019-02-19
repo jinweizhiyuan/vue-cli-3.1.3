@@ -11,7 +11,7 @@ mongodb
 # 配置注意
 由于引用了vux并且使用了vue-cli3.1，导致webpack打包时报错`"export 'default' (imported as 'querystring') was not found in '../../tools/`，解决方法有两个
 
-1. 从vuxgithub项目下载master分支，把其下的dist目录复制到node_modules/vux/下
+1. 从[vux github](https://github.com/airyland/vux)项目下载master分支，打开下载项目的目录，运行npm run xbuild，把生成的dist目录复制到本项目node_modules/vux/下（不要运行npmi install下载node_modules， 如果下载会调用本目录下的less-loader覆盖本项目的less-loader）
 2. babel.config.js中增加配置`"module":"commonjs"`
 
 __问题分析:__ 由于vux使用了commonjs模块，而vue使用的是esmodule，因此打包模块统一就可以了

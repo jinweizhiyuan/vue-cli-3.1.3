@@ -2,10 +2,22 @@ const vuxLoader = require('vux-loader')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 
+let getIPAdress = require('./back-end/utils/ip')
+let address = getIPAdress()
+
 module.exports = {
-  // devServer: {
-  //   proxy: 'http://localhost:3000'
-  // }
+  devServer: {
+    host: address,
+    proxy: {
+      '/api': {
+        target: 'http://' + address + ':3000/'
+      },
+      '/socket.io': {
+        target: 'http://' + address + ':3000/',
+        ws:true
+      }
+    }
+  },
   configureWebpack: config => {
     // let _entry = config.entry
     // config.entry = Object.assign({'babel-polyfill':'babel-polyfill'}, _entry)

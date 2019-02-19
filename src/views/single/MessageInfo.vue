@@ -1,7 +1,7 @@
 <template>
 <div>
     <x-header :title="user.userName" :left-options="{backText:''}" :right-options="{showMore:true}" @click-click-more="moreHandler" />
-    <view-box class="chat-body max-view-box">
+    <view-box class="chat-body max-view-box" ref="chatBody">
         <ul class="chat-list">
             <!-- <li>
                 <span class="icon"><img :src="icon1" /></span>
@@ -27,6 +27,7 @@
 <script>
 import { ViewBox, XHeader, XInput, Group } from "vux";
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import { TweenLite } from 'gsap/TweenLite'
 // import icon1 from '@/assets/logo.png'
 // import icon2 from '@/assets/icon.jpg'
 
@@ -68,7 +69,6 @@ export default {
             this.socket.send(msg)
             this.add_message(msg)
             this.msg = '';
-            console.log('sendMsg')
         },
         printMsg(o) {
             o.isRead = true
@@ -83,11 +83,15 @@ export default {
     },
     watch: {
         receiveMsg(){
-            console.log(arguments)
-        let userName = this.$route.query.userName
-        this.user = this.get_user_by_name(userName)
-        this.user.msgCount = 0
-        this.update_user(this.user)
+            let userName = this.$route.query.userName
+            this.user = this.get_user_by_name(userName)
+            this.user.msgCount = 0
+            this.update_user(this.user)
+
+            //消息列表向下滚动
+            let $chatBody = this.$refs.chatBody.$el.firstElementChild
+            let scroll = $chatBody.scrollHeight - $chatBody.offsetHeight
+            TweenLite.to($chatBody, 1, {scrollTop: scroll})
         }
     }
 };

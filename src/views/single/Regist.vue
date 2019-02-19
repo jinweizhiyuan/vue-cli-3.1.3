@@ -39,7 +39,7 @@ export default {
     login: function() {
       var vm = this
       if (this.userName && this.pwd && this.portrait) {
-        this.axios.post('http://localhost:3000/api/regist', {
+        this.axios.post('api/regist', {
             userName: this.userName,
             password: this.pwd,
             portrait: this.portrait

@@ -6,7 +6,7 @@ const mongoDriver = require('koa-mongo-driver')
 const app = new Koa();
 const server = require('http').Server(app.callback());
 const io = require('socket.io')(server, {
-    origins: '*'
+    // origins: '*'
 });
 
 let {Console} = require('console')
@@ -112,7 +112,7 @@ io.on('connection', (socket) => {
             console.log(err)
         }).then(function () {
             // 接收转发私人消息
-            socket.on('message', data => {
+            socket.on('message', data => { console.log(data)
                 let toSocket = socketMap.get(data.to)
                 if (toSocket) {
                     // toSocket.emit()
@@ -153,29 +153,18 @@ app.use(mongoDriver({
 let controller = require('./back-end/controller.js')
 app.use(controller())
 
-server.listen(3000, (c) => {
-    let address = getIPAdress()
+let getIPAdress = require('./back-end/utils/ip')
+let address = getIPAdress()
+server.listen(3000, address, (c) => {
     console.log('listening on %s 3000', address)
 })
-
 process.on('SIGINT', () => {
+    var chalk = require('chalk')
+    console.log(chalk.yellow('server exit'))
     MongoClient.connect(...mongodbConfig).then(async (client) => {
         await client.db().collection('user').updateMany({}, {$set:{online:0}})
         process.exit()
+    }).catch(() => {
+        process.exit()
     })
-    
 })
-
-function getIPAdress() {
-    const os = require('os')
-    var interfaces = os.networkInterfaces();
-    for (var devName in interfaces) {
-        var iface = interfaces[devName];
-        for (var i = 0; i < iface.length; i++) {
-            var alias = iface[i];
-            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
-                return alias.address;
-            }
-        }
-    }
-}
