@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import { Panel, Badge, ViewBox } from "vux"
+import { Panel, Badge, ViewBox } from 'vux'
 import logo from "@/assets/logo.png"
-import { mapState, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {

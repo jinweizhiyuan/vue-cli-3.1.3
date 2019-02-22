@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { Grid, GridItem } from "vux";
+import { Grid, GridItem } from 'vux'
 import defaultIcon from '@/assets/logo.png'
 
 export default {

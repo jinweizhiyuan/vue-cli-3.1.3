@@ -12,7 +12,45 @@ mongodb
 由于引用了vux并且使用了vue-cli3.1，导致webpack打包时报错`"export 'default' (imported as 'querystring') was not found in '../../tools/`，解决方法有两个
 
 1. 从[vux github](https://github.com/airyland/vux)项目下载master分支，打开下载项目的目录，运行npm run xbuild，把生成的dist目录复制到本项目node_modules/vux/下（不要运行npmi install下载node_modules， 如果下载会调用本目录下的less-loader覆盖本项目的less-loader）
-2. babel.config.js中增加配置`"module":"commonjs"`
+2. babel.config.js中增加配置`"module":"commonjs"`，随之而来的问题是打包时无法按需打包，会把所有的vux打包，这个方法不完美
+3. 所有的项目配置保持不变，找到node_modules/vux-loader/src/index.js，找到`======== append js-loader ========`替换其下的一段代码为
+    ```javascript
+    let _hasBabelLoader = false
+    config.module[loaderKey].forEach(function (rule) {console.log('\n=========\n', JSON.stringify(rule))
+        if (rule.use && (rule.use[0] === 'babel-loader' || (typeof rule.use[0] === 'object' && rule.use[0].loader === 'babel-loader'))) {
+        rule.use.push(jsLoader)
+        _hasBabelLoader = true
+        } else {
+        if (rule.loader === 'babel' || rule.loader === 'babel-loader' || (/babel/.test(rule.loader) && !/!/.test(rule.loader))) {
+            if (isWebpack2 && (rule.query || rule.options)) {console.log(222)
+            let options
+            if(rule.options){
+                options = rule.options
+                delete rule.options
+            }else{
+                options = rule.query
+                delete rule.query
+            }
+            rule.use = [{
+                loader: 'babel-loader',
+                options: options
+            }, jsLoader]
+            delete rule.loader
+            _hasBabelLoader = true
+            } else {console.log(333)
+            rule.loader = 'babel-loader!' + jsLoader
+            _hasBabelLoader = true
+            }
+        }
+        }
+    })
+    if (!_hasBabelLoader) {
+        config.module.rules.push({
+        test: /\.js$/,
+        loaders: [jsLoader]
+        })
+    }
+    ```
 
 __问题分析:__ 由于vux使用了commonjs模块，而vue使用的是esmodule，因此打包模块统一就可以了
 

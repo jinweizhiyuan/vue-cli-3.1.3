@@ -3,10 +3,11 @@ module.exports = {
     [
       '@vue/app',
       {
-        "modules": "commonjs"
-        //   polyfills: {
-        //     useBuiltIns: false
-        //   }
+        // "modules": "commonjs"
+        // ,polyfills: {
+          // useBuiltIns: 'entry'
+          // shippedProposals: true
+        // }
       }
     ]
   ]

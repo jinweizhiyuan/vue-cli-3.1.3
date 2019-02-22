@@ -4,7 +4,7 @@ import VueAxios from 'vue-axios'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { ToastPlugin } from 'vux'
+import { ToastPlugin, TransferDom  } from 'vux'
 
 import 'font-awesome/css/font-awesome.min.css'
 import '@/assets/css/public.css'
@@ -12,6 +12,7 @@ import '@/assets/css/public.css'
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 Vue.use(ToastPlugin)
+Vue.directive('transform-dom', TransferDom)
 
 new Vue({
   router,

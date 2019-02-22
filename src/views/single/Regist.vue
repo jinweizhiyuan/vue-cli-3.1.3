@@ -18,8 +18,7 @@
 </template>
 
 <script>
-import { XInput, Group, AlertModule, Box, XButton, Checker, CheckerItem } from "vux"
-import io from "socket.io-client"
+import { XInput, Group, AlertModule, Box, XButton, Checker, CheckerItem } from 'vux'
 import { mapState } from 'vuex'
 
 export default {
@@ -43,7 +42,7 @@ export default {
             userName: this.userName,
             password: this.pwd,
             portrait: this.portrait
-        }).then(function(response) {
+        }).then(function() {
           vm.$vux.toast.show({
             text: '注册成功',
             type: 'success'

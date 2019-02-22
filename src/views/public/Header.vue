@@ -4,12 +4,12 @@
             <!-- <x-icon type="ios-search"></x-icon> -->
             <x-icon type="ios-plus-empty"></x-icon>
         </div>
-        <actionsheet v-model="showAcion" :menus="menus" @on-click-menu="doAction"></actionsheet>
+        <actionsheet v-transform-dom v-model="showAcion" :menus="menus" @on-click-menu="doAction"></actionsheet>
     </x-header>
 </template>
 
 <script>
-import { XHeader, Actionsheet  } from 'vux'
+import { XHeader, Actionsheet } from 'vux'
 
 export default {
     data() {
@@ -22,7 +22,6 @@ export default {
 
     methods: {
         rightHandler: function(e) {
-            console.log(e)
             this.showAcion = true
         },
         back(){

@@ -1,7 +1,7 @@
 <template>
 <div>
     <x-header :title="user.userName" :left-options="{backText:''}" :right-options="{showMore:true}" @click-click-more="moreHandler" />
-    <view-box class="chat-body max-view-box" ref="chatBody">
+    <view-box class="" ref="chatBody">
         <ul class="chat-list">
             <!-- <li>
                 <span class="icon"><img :src="icon1" /></span>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { ViewBox, XHeader, XInput, Group } from "vux";
+import { ViewBox, XHeader, XInput, Group } from 'vux'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { TweenLite } from 'gsap/TweenLite'
 // import icon1 from '@/assets/logo.png'
@@ -89,9 +89,11 @@ export default {
             this.update_user(this.user)
 
             //消息列表向下滚动
-            let $chatBody = this.$refs.chatBody.$el.firstElementChild
-            let scroll = $chatBody.scrollHeight - $chatBody.offsetHeight
-            TweenLite.to($chatBody, 1, {scrollTop: scroll})
+            this.$nextTick(() => {
+                let $chatBody = this.$refs.chatBody.$el.firstElementChild
+                let scroll = $chatBody.scrollHeight - $chatBody.offsetHeight
+                TweenLite.to($chatBody, 1, {scrollTop: scroll})
+            })
         }
     }
 };

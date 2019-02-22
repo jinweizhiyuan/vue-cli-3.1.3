@@ -112,7 +112,7 @@ io.on('connection', (socket) => {
             console.log(err)
         }).then(function () {
             // 接收转发私人消息
-            socket.on('message', data => { console.log(data)
+            socket.on('message', data => {
                 let toSocket = socketMap.get(data.to)
                 if (toSocket) {
                     // toSocket.emit()
@@ -156,7 +156,7 @@ app.use(controller())
 let getIPAdress = require('./back-end/utils/ip')
 let address = getIPAdress()
 server.listen(3000, address, (c) => {
-    console.log('listening on %s 3000', address)
+    console.log('listening on %s:3000', address)
 })
 process.on('SIGINT', () => {
     var chalk = require('chalk')

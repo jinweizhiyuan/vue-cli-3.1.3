@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import {Tabbar, TabbarItem} from 'vux'
+import { Tabbar, TabbarItem } from 'vux'
 import { mapGetters } from 'vuex'
 
 export default {
