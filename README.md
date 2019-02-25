@@ -6,7 +6,31 @@
 nodejs、soket.io、koa、vue、vuex、vue-router、vux
 
 # 数据库
-mongodb
+mongodb 4.0.5
+## 数据库配置
+1. 从mongodb官网下载[数据库](https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-4.0.6.zip),并解压
+2. 进入mongodb/bin目录，命令行运行`mongod`命令启动数据库
+3. 在bin目录下，新建一个命令行运行`mongo`命令，执行以下命令：
+```
+use admin
+db.createUser({user:'admin', pwd:'admin', roles:['root']})
+```
+4. 在解压根目录中添加mongod.cfg文件，内容如下：
+```
+systemLog:
+    destination: file
+    path: D:\Program\mongodb-win32-x86_64-2008plus-ssl-4.0.5\data\log\mongod.log
+    logAppend: true
+storage:
+    dbPath: D:\Program\mongodb-win32-x86_64-2008plus-ssl-4.0.5\data
+    journal:
+        enabled: true
+net:
+    bindIp: 0.0.0.0
+    port: 27017
+security:
+    authorization: enabled
+```
 
 # 配置注意
 由于引用了vux并且使用了vue-cli3.1，导致webpack打包时报错`"export 'default' (imported as 'querystring') was not found in '../../tools/`，解决方法有两个
@@ -16,13 +40,13 @@ mongodb
 3. 所有的项目配置保持不变，找到node_modules/vux-loader/src/index.js，找到`======== append js-loader ========`替换其下的一段代码为
     ```javascript
     let _hasBabelLoader = false
-    config.module[loaderKey].forEach(function (rule) {console.log('\n=========\n', JSON.stringify(rule))
+    config.module[loaderKey].forEach(function (rule) {
         if (rule.use && (rule.use[0] === 'babel-loader' || (typeof rule.use[0] === 'object' && rule.use[0].loader === 'babel-loader'))) {
         rule.use.push(jsLoader)
         _hasBabelLoader = true
         } else {
         if (rule.loader === 'babel' || rule.loader === 'babel-loader' || (/babel/.test(rule.loader) && !/!/.test(rule.loader))) {
-            if (isWebpack2 && (rule.query || rule.options)) {console.log(222)
+            if (isWebpack2 && (rule.query || rule.options)) {
             let options
             if(rule.options){
                 options = rule.options
@@ -37,7 +61,7 @@ mongodb
             }, jsLoader]
             delete rule.loader
             _hasBabelLoader = true
-            } else {console.log(333)
+            } else {
             rule.loader = 'babel-loader!' + jsLoader
             _hasBabelLoader = true
             }
