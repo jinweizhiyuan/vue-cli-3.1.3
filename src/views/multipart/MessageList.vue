@@ -1,5 +1,5 @@
 <template>
-  <view-box>
+  <view-box class="view-box">
     <panel>
       <a
         slot="body"

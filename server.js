@@ -9,14 +9,16 @@ const io = require('socket.io')(server, {
     // origins: '*'
 });
 
+const { makeResult } = require('./back-end/utils/common')
+
 let {Console} = require('console')
 let cs = new Console(process.stdout, process.stderr)
 
-var getStackTrace = function () {
-    var obj = {};
-    Error.captureStackTrace(obj, getStackTrace);
-    return obj.stack;
-};
+// var getStackTrace = function () {
+//     var obj = {};
+//     Error.captureStackTrace(obj, getStackTrace);
+//     return obj.stack;
+// };
 // var log = console.log;
 // console.log = function () {
 //     var stack = getStackTrace() || ""
@@ -43,11 +45,6 @@ var getStackTrace = function () {
 //     log.apply(console, arguments)
 // };
 
-function makeResult(data, opt) {
-    let ret = {data: data, code: '1000', message: 'success'};
-    Object.assign(ret, opt)
-    return ret
-}
 
 let socketMap = new Map()
 let MongoClient = require('mongodb').MongoClient;

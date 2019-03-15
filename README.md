@@ -80,7 +80,6 @@ __问题分析:__ 由于vux使用了commonjs模块，而vue使用的是esmodule�
 
 参考：
     [关于vuejs-templates/webpack 中 “exports is not defined”报错的处理](https://segmentfault.com/a/1190000009526372)
-
     [@bable/preset-env](https://babeljs.io/docs/en/babel-preset-env/)
 
 # 运行说明

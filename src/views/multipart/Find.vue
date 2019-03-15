@@ -1,7 +1,7 @@
 <template>
   <view-box class="max-view-box">
     <group>
-      <cell title="朋友圈" is-link="false" link="/">
+      <cell title="朋友圈" is-link link="/">
         <img :src="icon" slot="icon" />
       </cell>
     </group>

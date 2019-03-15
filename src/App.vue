@@ -64,6 +64,10 @@ html, body {
 .h-100 {
   height: 100%;
 }
+
+.view-box {
+  height: calc(100% - 53px - 46px) !important;
+}
 </style>
 
 <style lang="less">

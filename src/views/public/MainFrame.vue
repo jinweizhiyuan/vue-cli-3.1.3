@@ -43,9 +43,7 @@ export default {
 // .weui-tab__panel {
 //   padding: 46px auto 53px;
 // }
-.weui-tab {
-  height: calc(100% - 53px - 46px) !important;
-}
+
 .weui-tab__panel {
     padding-bottom: 0 !important;
 }

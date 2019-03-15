@@ -1,7 +1,7 @@
 <template>
 <div>
     <x-header :title="user.userName" :left-options="{backText:''}" :right-options="{showMore:true}" @click-click-more="moreHandler" />
-    <view-box class="" ref="chatBody">
+    <view-box class="view-box" ref="chatBody">
         <ul class="chat-list">
             <!-- <li>
                 <span class="icon"><img :src="icon1" /></span>

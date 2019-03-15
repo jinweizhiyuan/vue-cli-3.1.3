@@ -30,14 +30,15 @@
 </template>
 
 <script>
-import { Group, Cell, Panel } from 'vux'
+import { Group, Cell, Panel, Badge } from 'vux'
 import icon from '@/assets/icon.jpg'
 
 export default {
   components: {
     Group,
     Cell,
-    Panel
+    Panel,
+    Badge
   },
 
   data() {

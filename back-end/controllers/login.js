@@ -1,4 +1,4 @@
-const mongoClient = require('mongodb').MongoClient;
+// const mongoClient = require('mongodb').MongoClient;
 
 async function login(ctx, next) {
     const userTable = await ctx.mongo.db().collection('user')
