@@ -5,7 +5,6 @@
         slot="body"
         v-for="(item, index) in users" 
         :key="index"
-        :href="item.url" 
         @click.prevent="onItemClick(item)" 
         class="weui-media-box weui-media-box_appmsg">
         <div class="weui-media-box__hd" v-if="item.portrait">

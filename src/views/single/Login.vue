@@ -1,8 +1,8 @@
 <template>
   <view-box>
     <group title="用户登录">
-      <x-input label-width="3em" placeholder="用户名" v-model.trim="userName"></x-input>
-      <x-input label-width="3em" placeholder="密码" type="password" v-model.trim="pwd"></x-input>
+      <x-input label-width="3em" placeholder="用户名" v-model.trim="userName" @on-enter="shortcutLogin"></x-input>
+      <x-input label-width="3em" placeholder="密码" type="password" v-model.trim="pwd" @on-enter="shortcutLogin"></x-input>
     </group>
     <box gap="10px">
       <div class="c-f">
@@ -30,6 +30,12 @@ export default {
   components: { XInput, Group, XButton, ViewBox, Box },
 
   methods: {
+    shortcutLogin: function() {
+      console.log('shotcut')
+      if (this.userName && this.pwd) {
+        this.login()
+      }
+    },
     login: function() {
       var vm = this;
       if (this.userName && this.pwd) {

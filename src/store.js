@@ -60,7 +60,7 @@ export default new Vuex.Store({
     },
     add_message(state, payload) {
       // 自己发送的消息也加入被接收消息
-      if (payload.from == state.currentUser.userName) {
+      if (payload.from._id == state.currentUser._id) {
         let _from = payload.from
         payload.from = payload.to
         payload.to = _from
@@ -70,14 +70,14 @@ export default new Vuex.Store({
       
       let from = payload.from,
           broadcast = state.broadcast
-      if (!broadcast[from]) {
+      if (!broadcast[from._id]) {
         // 触发响应式属性
-        Vue.set(state.broadcast, from, [])
+        Vue.set(state.broadcast, from._id, [])
       }
-      broadcast[from].push(payload)
+      broadcast[from._id].push(payload)
 
       let index = state.users.findIndex(u => {
-        if (u.userName == from) return true
+        if (u._id == from._id) return true
       })
 
       let user= state.users[index]
@@ -101,10 +101,10 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    get_user_by_name(state) {
-      return function(name) {
+    get_user_by_id(state) {
+      return function(id) {
         return state.users.find(u => {
-          if (u.userName == name) return true
+          if (u._id == id) return true
         })
       }
       

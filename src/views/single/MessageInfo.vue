@@ -48,9 +48,9 @@ export default {
 
     computed: {
         ...mapState(['broadcast', 'currentUser', 'socket']),
-        ...mapGetters(['get_user_by_name']),
+        ...mapGetters(['get_user_by_id']),
         receiveMsg() {
-            return this.broadcast[this.user.userName]
+            return this.broadcast[this.user._id]
         }
     },
 
@@ -61,8 +61,8 @@ export default {
         },
         sendMsg(val) {
             let msg = {
-                from: this.currentUser.userName,
-                to: this.user.userName,
+                from: this.currentUser,
+                to: this.user,
                 message:val,
                 isRead: false
             }
@@ -76,15 +76,15 @@ export default {
         }
     },
     created(){
-        let userName = this.$route.query.userName
-        this.user = this.get_user_by_name(userName)
+        let _id = this.$route.query._id
+        this.user = this.get_user_by_id(_id)
         this.user.msgCount = 0
         this.update_user(this.user)
     },
     watch: {
         receiveMsg(){
-            let userName = this.$route.query.userName
-            this.user = this.get_user_by_name(userName)
+            let _id = this.$route.query._id
+            this.user = this.get_user_by_id(_id)
             this.user.msgCount = 0
             this.update_user(this.user)
 

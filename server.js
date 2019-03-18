@@ -63,29 +63,30 @@ io.on('connection', (socket) => {
     socket.on('login', (data) => {
         MongoClient.connect(...mongodbConfig).then(async function (client) {
             coll = await client.db().collection('user')
-            let result = await coll.find(data, {
+            let result = await coll.findOne(data, {
                 projection: {
                     userName: 1,
-                    portrait: 1
+                    portrait: 1,
+                    _id: 1
                 }
-            }).toArray()
+            })
             
-            if (result.length > 0) {
+            if (result) {
                 console.log('连接成功')
 
                 // socket 实例和用户名称映
-                socketMap.set(data.userName, socket)
+                socketMap.set(result._id.toString(), socket)
 
                 // 用户标记为在线
-                coll.updateOne(data, {$set:{online:1}})
+                coll.updateOne({_id:result._id}, {$set:{online:1}})
 
-                let ret = makeResult(result[0], {message:'连接成功'});
+                let ret = makeResult(result, {message:'连接成功'});
 
                 // 用户初始化
                 socket.emit('init-login', ret)
 
                 // 获取在线用户
-                let users = await coll.find({userName:{$ne:data.userName}, online:1}, {projection:{userName:1, portrait:1}}).toArray()
+                let users = await coll.find({_id:{$ne:result._id}, online:1}, {projection:{userName:1, portrait:1}}).toArray()
                 socket.emit('sync-user', makeResult(users))
 
                 // 发送用户上线通知
@@ -97,7 +98,7 @@ io.on('connection', (socket) => {
                     coll.updateOne(data, {$set:{online:0}})
                     // 用户下线
                     socket.broadcast.emit('user-offline', ret)
-                    socketMap.delete(data.userName)
+                    socketMap.delete(result._id)
                     console.log('socket close')
                 })
             } else {
@@ -110,7 +111,7 @@ io.on('connection', (socket) => {
         }).then(function () {
             // 接收转发私人消息
             socket.on('message', data => {
-                let toSocket = socketMap.get(data.to)
+                let toSocket = socketMap.get(data.to._id)
                 if (toSocket) {
                     // toSocket.emit()
                     toSocket.emit('message', data)
