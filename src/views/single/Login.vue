@@ -31,7 +31,6 @@ export default {
 
   methods: {
     shortcutLogin: function() {
-      console.log('shotcut')
       if (this.userName && this.pwd) {
         this.login()
       }
@@ -72,7 +71,7 @@ export default {
               vm.remove_user(data.data);
             });
 
-            socket.on("message", data => {
+            socket.on("message", data => {debugger
               vm.add_message(data);
             });
 

@@ -7,7 +7,7 @@
         </x-header>
         <view-box>
             <checker v-model="selectUsers" type="checkbox" default-item-class="checker-item" selected-item-class="checker-item-checked" disabled-item-class="">
-                <checker-item v-for="u in users" :value="u.userName" :key="u.userName">
+                <checker-item v-for="u in users" :value="u._id" :key="u.userName">
                     <img :src="u.portrait" />
                     {{ u.userName }}
                 </checker-item>
@@ -39,8 +39,8 @@ export default {
     methods: {
         createGroup() {
             console.log(this.selectUsers)
-            this.axios.post('api/createGroup',{}).then(() => {
-
+            this.axios.post('api/createGroup',{users: this.selectUsers}).then((result) => {
+                console.log(result)
             })
         }
     }

@@ -76,6 +76,7 @@ export default {
         }
     },
     created(){
+        // 查询用户聊天对象并更未读新消息
         let _id = this.$route.query._id
         this.user = this.get_user_by_id(_id)
         this.user.msgCount = 0
@@ -95,6 +96,9 @@ export default {
                 TweenLite.to($chatBody, 1, {scrollTop: scroll})
             })
         }
+    },
+    destroyed() {
+
     }
 };
 </script>

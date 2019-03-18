@@ -58,7 +58,7 @@ let mongodbConfig = ['mongodb://127.0.0.1:27017/chat', {
     authMechanism: 'DEFAULT'
 }]
 io.on('connection', (socket) => {
-    console.log('connection');
+    console.log('connection')
 
     socket.on('login', (data) => {
         MongoClient.connect(...mongodbConfig).then(async function (client) {
@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
                 console.log('连接成功')
 
                 // socket 实例和用户名称映
-                socketMap.set(result._id.toString(), socket)
+                socketMap.set(result._id.toString(), socket.id)
 
                 // 用户标记为在线
                 coll.updateOne({_id:result._id}, {$set:{online:1}})
@@ -98,7 +98,7 @@ io.on('connection', (socket) => {
                     coll.updateOne(data, {$set:{online:0}})
                     // 用户下线
                     socket.broadcast.emit('user-offline', ret)
-                    socketMap.delete(result._id)
+                    socketMap.delete(result._id.toString())
                     console.log('socket close')
                 })
             } else {
@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
         }).then(function () {
             // 接收转发私人消息
             socket.on('message', data => {
-                let toSocket = socketMap.get(data.to._id)
+                let toSocket = socket.to(socketMap.get(data.to._id))
                 if (toSocket) {
                     // toSocket.emit()
                     toSocket.emit('message', data)
