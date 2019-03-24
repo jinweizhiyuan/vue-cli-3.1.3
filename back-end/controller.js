@@ -27,9 +27,27 @@ function addController(router, controllers_dir) {
     }
 }
 
+function session() {
+    return function(ctx, next) {
+        if (ctx.session.isNew) {
+            if (ctx.request.path !== '/api/login') {
+                // ctx.router.redirect('')
+                ctx.response.body = {code:'1302', message:'请登录'}
+                ctx.status = 200
+            } else {
+                return next()
+            }
+        } else {
+            return next()
+        }
+    }
+}
+
 module.exports = function(dir) {
     let controllers_dir = dir || 'controllers',
         router = require('koa-router')();
+
+    router.use(session())
 
     addController(router, controllers_dir)
 

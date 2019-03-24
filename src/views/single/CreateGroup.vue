@@ -38,9 +38,12 @@ export default {
     },
     methods: {
         createGroup() {
-            console.log(this.selectUsers)
-            this.axios.post('api/createGroup',{users: this.selectUsers}).then((result) => {
+            let users = Object.assign({}, this.selectUsers)
+            console.log(users)
+            // return
+            this.axios.post('api/createGroup',{users: users}).then((result) => {
                 console.log(result)
+                //TODO: 跳转到群聊天页面
             })
         }
     }

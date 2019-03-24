@@ -18,6 +18,7 @@
 import { XInput, Group, XButton, AlertModule, ViewBox, Box } from 'vux'
 import io from "socket.io-client"
 import { mapMutations } from "vuex"
+import { errHandler } from '@/assets/js/common.js'
 
 export default {
   data() {
@@ -48,7 +49,15 @@ export default {
             const socket = io("", { reconnection: false });
             socket.on("connect", function() {
               vm.set_socket(socket);
-              socket.emit("login", { userName: vm.userName, password: vm.pwd });
+              socket.emit("login", { userName: vm.userName, password: vm.pwd }, function(data) {
+                errHandler(data)
+                /* if (data.code != '1000') {
+                  vm.$vux.$toast.show({
+                    text:data.message,
+                    type: 'warn'
+                  })
+                } */
+              });
             });
 
             socket.on("init-login", data => {
@@ -71,9 +80,21 @@ export default {
               vm.remove_user(data.data);
             });
 
-            socket.on("message", data => {debugger
+            socket.on("message", data => {
               vm.add_message(data);
             });
+
+            socket.on("socket-close", data => {
+              vm.$vux.toast.show({
+                text: data.message,
+                type: 'warn'
+              })
+              vm.$router.push({path: '/'})
+            })
+
+            socket.on("timeout", data => {
+              errHandler(data)
+            })
 
             window.onbeforeunload = function() {
               return "离开后用户将自动下线！";

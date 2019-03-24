@@ -6,9 +6,11 @@ async function login(ctx, next) {
     let ret
     if (result.length > 0) {
         ret = {code: '1000', message: 'success'}
+        ctx.session.user = result[0]._id
     } else {
         ret = {code: '1002', message: '用户或密码不存在'}
     }
+    
     ctx.response.body = ret
     next()
 }
