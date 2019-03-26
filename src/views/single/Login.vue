@@ -64,25 +64,29 @@ export default {
               // console.log(data)
               vm.set_currentUser(data.data);
               vm.$router.push("/multi-part");
-            });
+            })
 
             socket.on("sync-user", data => {
               // console.log(data)
-              vm.add_user(data.data);
-            });
+              vm.add_user(data.data)
+            })
 
             socket.on("user-online", data => {
               // console.log(data)
-              vm.add_user(data.data);
-            });
+              vm.add_user(data.data)
+            })
 
             socket.on("user-offline", data => {
-              vm.remove_user(data.data);
-            });
+              vm.remove_user(data.data)
+            })
 
             socket.on("message", data => {
-              vm.add_message(data);
-            });
+              vm.add_message(data)
+            })
+
+            socket.on("init-group", groupArray => {
+              vm.add_group(groupArray)
+            })
 
             socket.on("socket-close", data => {
               vm.$vux.toast.show({
@@ -98,11 +102,11 @@ export default {
 
             window.onbeforeunload = function() {
               return "离开后用户将自动下线！";
-            };
+            }
 
             window.onunload = function() {
               socket.close();
-            };
+            }
           });
       } else {
         AlertModule.show({
@@ -117,7 +121,8 @@ export default {
       "add_user",
       "add_user",
       "remove_user",
-      "add_message"
+      "add_message",
+      "add_group"
     ])
   }
 };

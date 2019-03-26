@@ -59,7 +59,8 @@ export default {
   
   methods: {
     onItemClick: function(item, event){
-      this.$router.push({path:'/multi-part/message/messageInfo', query:item})
+      let url = item.isGroup ? '/multi-part/message/groupInfo' : '/multi-part/message/messageInfo'
+      this.$router.push({path:url, query:item})
     }
   },
 

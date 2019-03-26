@@ -2,6 +2,9 @@ const vuxLoader = require('vux-loader')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 
+var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+var webpack = require('webpack');
+
 let getIPAdress = require('./back-end/utils/ip')
 let address = getIPAdress()
 
@@ -38,6 +41,9 @@ module.exports = {
     config.plugins.push(new CopyWebpackPlugin([{from:path.resolve(__dirname, 'src/assets/images'), to:path.resolve(__dirname, 'dist/images')}]))
 
     // config.entry.app.push('@babel/polyfill')
+
+    // loash 按需加载
+    config.plugins.push(new LodashModuleReplacementPlugin)
   },
 
   lintOnSave: true

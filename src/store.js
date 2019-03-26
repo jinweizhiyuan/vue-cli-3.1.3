@@ -35,17 +35,13 @@ export default new Vuex.Store({
     add_user(state, payload) {
       if (payload instanceof Array) {
         payload.forEach(function (user) {
-          let isExist = state.users.findIndex(u => {
-            return u.userName == user.userName
-          });
-          if (isExist == -1)
+          let isExist = isExistUser(state, user)
+          if (!isExist)
             state.users.push(user)
         })
       } else {
-        let isExist = state.users.findIndex(u => {
-          return u.userName == payload.userName
-        });
-        if (isExist == -1)
+        let isExist = isExistUser(state, payload)
+        if (!isExist)
           state.users.push(payload)
       }
     },
@@ -59,22 +55,17 @@ export default new Vuex.Store({
       }
     },
     add_message(state, payload) {
-      // 自己发送的消息也加入被接收消息
-      if (payload.from._id == state.currentUser._id) {
-        let _from = payload.from
-        payload.from = payload.to
-        payload.to = _from
-        payload.self = true
-        payload.isRead = true
-      }
+      // 群信息直接用群ID，用户信息用两个用户ID作为会话ID
+      let sessionId = payload.to.isGroup ? payload.to._id : [payload.from._id, payload.to._id].sort().join('-')
       
-      let from = payload.from,
+      // 群信息取群作为标记未读对象
+      let from = payload.to.isGroup ? payload.to : payload.from,
           broadcast = state.broadcast
-      if (!broadcast[from._id]) {
+      if (!broadcast[sessionId]) {
         // 触发响应式属性
-        Vue.set(state.broadcast, from._id, [])
+        Vue.set(state.broadcast, sessionId, [])
       }
-      broadcast[from._id].push(payload)
+      broadcast[sessionId].push(payload)
 
       let index = state.users.findIndex(u => {
         if (u._id == from._id) return true
@@ -98,6 +89,17 @@ export default new Vuex.Store({
         if (u.userName == payload.userName) return true
       })
       Vue.set(state.users, index, payload)
+    },
+
+    // group 和 users混合，利用页面
+    add_group(state, payload) {
+      if (!(payload instanceof Array)) payload = [payload]
+      payload.forEach(group => {
+        let _group = {_id: group.groupId, userName: group.groupName, portrait: 'images/group.jpg', isGroup: true}
+        if (!isExistUser(state, _group)) {
+          state.users.push(_group)
+        }
+      })
     }
   },
   getters: {
@@ -129,3 +131,9 @@ export default new Vuex.Store({
 
   }
 })
+
+function isExistUser(state, user) {
+  return state.users.findIndex(u => {
+    return u.userName == user._id
+  }) != -1
+}

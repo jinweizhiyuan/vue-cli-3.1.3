@@ -12,8 +12,8 @@
                 <div>刚刚吃过行饭</div>
             </li> -->
 
-            <li v-for="(obj, index) in receiveMsg" :key="index" :class="{self: obj.from._id === currentUser._id}">
-                <span class="icon"><img :src="obj.from._id === currentUser._id ? currentUser.portrait : user.portrait" /></span>
+            <li v-for="(obj, index) in receiveMsg" :key="index" :class="{self: obj.from._id == currentUser._id}">
+                <span class="icon"><img :src="obj.from._id == currentUser._id ? currentUser.portrait : obj.from.portrait" /></span>
                 <div>{{ printMsg(obj) }}</div>
             </li>
         </ul>
@@ -50,8 +50,7 @@ export default {
         ...mapState(['broadcast', 'currentUser', 'socket']),
         ...mapGetters(['get_user_by_id']),
         receiveMsg() {
-            let sessionId = [this.user._id, this.currentUser._id].sort().join('-')
-            return this.broadcast[sessionId]
+            return this.broadcast[this.user._id]
         }
     },
 

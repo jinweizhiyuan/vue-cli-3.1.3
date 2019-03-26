@@ -18,7 +18,8 @@
 
 <script>
 import { XHeader, ViewBox, Checker, CheckerItem, XButton } from 'vux'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+import _ from 'lodash'
 
 export default {
     data() {
@@ -26,6 +27,7 @@ export default {
             selectUsers: []
         }
     },
+
     components: {
         XHeader,
         ViewBox,
@@ -33,19 +35,27 @@ export default {
         CheckerItem,
         XButton
     },
+
     computed: {
-        ...mapState(['users'])
+        ...mapState(['users', 'currentUser'])
     },
+
     methods: {
         createGroup() {
-            let users = Object.assign({}, this.selectUsers)
-            console.log(users)
-            // return
-            this.axios.post('api/createGroup',{users: users}).then((result) => {
-                console.log(result)
-                //TODO: 跳转到群聊天页面
+            let users = _.cloneDeep(this.selectUsers),
+                vm = this
+            users.push(vm.currentUser._id)
+            vm.axios.post('api/createGroup',{users: users}).then((result) => {
+                // 群已存在时不提示
+                !result.data.length && vm.$vux.toast.show({
+                    text: '创建群成功',
+                    type: 'success'
+                })
+                vm.add_group(result.data)
+                vm.$router.push({path:'/multi-part/message/groupInfo', query: result.data[0] || result.data})
             })
-        }
+        },
+        ...mapMutations(["add_group"])
     }
 }
 </script>

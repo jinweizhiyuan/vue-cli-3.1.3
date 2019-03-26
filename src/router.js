@@ -39,6 +39,9 @@ let router = new Router({
     path: '/multi-part/message/messageInfo',
     component: () => import('@/views/single/MessageInfo.vue')
   }, {
+    path: '/multi-part/message/groupInfo',
+    component: () => import('@/views/single/GroupInfo.vue')
+  },{
     path: '/login',
     component: () => import('@/views/single/Login.vue')
   }, {

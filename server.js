@@ -17,7 +17,7 @@ const CONFIG = {
     /** (number || 'session') maxAge in ms (default is 1 days) */
     /** 'session' will result in a cookie that expires when session/browser is closed */
     /** Warning: If a session cookie is stolen, this cookie will never expire */
-    maxAge: 60000,
+    maxAge: 'session',
     autoCommit: true, /** (boolean) automatically commit headers (default true) */
     overwrite: true, /** (boolean) can overwrite or not (default true) */
     httpOnly: true, /** (boolean) httpOnly or not (default true) */
@@ -62,7 +62,7 @@ let cs = new Console(process.stdout, process.stderr)
 // };
 
 
-let socketMap = global.socketMap = new WeakMap()
+let socketMap = global.socketMap = new Map()
 let MongoClient = require('mongodb').MongoClient;
 let mongodbConfig = ['mongodb://127.0.0.1:27017/chat', {
     useNewUrlParser: true,
@@ -113,12 +113,12 @@ io.on('connection', (socket) => {
                 ret.message = '用户上线'
                 socket.broadcast.emit('user-online', ret)
 
-                //查询属于用户的所群
+                //查询属于用户的所有群
                 let userGroup
-                groupUserClct.aggregate([
+                await groupUserClct.aggregate([
                     {
                         $match: {
-                            user: result._id
+                            user: result._id.toString()
                         }
                     }, 
                     {
@@ -134,15 +134,23 @@ io.on('connection', (socket) => {
                             groupId: '$group',
                             groupName: {$arrayElemAt: ['$groupInfo', 0]}
                         }
+                    },
+                    {
+                        $project: {
+                            groupId:1, 
+                            groupName:'$groupName.name'
+                        }
                     }
                 ], async function(error, cursor) {
                     userGroup = await cursor.toArray()
                 })
-                if (userGroup.length) {
+                if (userGroup && userGroup.length) {
                     // 加入群组
                     userGroup.forEach(group => {
-                        socket.join(group.groupId)
+                        socket.join(group.groupId.toString())
                     });
+
+                    socket.emit('init-group', userGroup)
                 }
 
                 socket.on('disconnect', () => {
@@ -164,10 +172,14 @@ io.on('connection', (socket) => {
         }).then(function () {
             // 接收转发私人消息
             socket.on('message', data => {
-                let toSocket = socket.to(socketMap.get(data.to._id).socketId)
-                if (toSocket) {
+                let toSocketId = data.to._id.toString(),
+                    toSocketObj = socketMap.get(toSocketId)
+                
+                if (toSocketObj) {
                     // toSocket.emit()
-                    toSocket.emit('message', data)
+                    socket.to(toSocketObj.socketId).emit('message', data)
+                } else if (socket.rooms[toSocketId]) {
+                    socket.to(toSocketId).emit('message', data)
                 }
                 
             })

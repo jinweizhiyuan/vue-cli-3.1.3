@@ -69,17 +69,7 @@ async function createGroup(ctx, next) {
         existGroup = await cursor.toArray()
     })
     if (existGroup.length) {
-        // 加入群组
-        let socketMap = global.socketMap
-        existGroup[0].forach(group => {
-            group.users.forEach(userId => {
-                let socket = socket.get(userId)
-                if (socket) {
-                    socket.join(group.groupId)
-                }
-            })
-            socket.join(group.groupId)
-        })
+        joinGroup(existGroup[0])
         ret = existGroup
     } else {
         // 获取群个数
@@ -98,8 +88,9 @@ async function createGroup(ctx, next) {
                 await session.commitTransaction()
                 ret = {
                     groupId: insertResult.insertedId,
-                    gorupName: groupName
+                    groupName: groupName
                 }
+                joinGroup(Object.assign({users}, ret))
             } else {
                 await session.abortTransaction()
                 opt = {
@@ -120,20 +111,17 @@ async function createGroup(ctx, next) {
     next()
 }
 
-/**
- * @description 创建群socket会话
- * @date 2019-03-21
- * @param {Object} ctx koa ctx
- * @param {Object} group 群信息
- */
-// function createGroupSocket(ctx, group) {
-//     let socketObj = global.socketObj,
-//         userId = ctx.session.user
-//     socketObj.get('')
-//     global.io.clients((error, clients) => {
-//         console.log(clients)
-//     })
-// }
+
+function joinGroup(group) {
+    // 群内所有成员加入群组
+    let socketMap = global.socketMap
+    group.users.forEach(userId => {
+        let socket = (socketMap.get(userId.toString())||{}).socket
+        if (socket) {
+            socket.join(group.groupId.toString())
+        }
+    })
+}
 
 module.exports = {
     'post /api/createGroup': createGroup
