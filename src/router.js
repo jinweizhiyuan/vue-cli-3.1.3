@@ -49,7 +49,6 @@ let router = new Router({
     component: () => import('@/views/single/Regist.vue')
   }, {
     path: '/create-group',
-    // todo 新建页面
     component: () => import('@/views/single/CreateGroup.vue')
   }]
 })

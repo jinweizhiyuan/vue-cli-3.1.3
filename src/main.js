@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import { ToastPlugin, TransferDom  } from 'vux'
 import { errHandler } from '@/assets/js/common.js'
+import  VueCookie from 'vue-cookie'
 
 import 'font-awesome/css/font-awesome.min.css'
 import '@/assets/css/public.css'
@@ -14,6 +15,7 @@ Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 Vue.use(ToastPlugin)
 Vue.directive('transform-dom', TransferDom)
+Vue.use(VueCookie)
 
 new Vue({
   router,

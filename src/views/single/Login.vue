@@ -36,9 +36,9 @@ export default {
         this.login()
       }
     },
-    login: function() {
+    login: function(force) {
       var vm = this;
-      if (this.userName && this.pwd) {
+      if (this.userName && this.pwd || force) {
         this.axios
           .post("api/login", {
             userName: this.userName,
@@ -124,6 +124,11 @@ export default {
       "add_message",
       "add_group"
     ])
+  },
+  created() {
+    if (this.$cookie.get('login')) {
+      this.login(true)
+    }
   }
 };
 </script>

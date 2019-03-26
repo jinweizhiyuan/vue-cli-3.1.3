@@ -4,9 +4,19 @@ async function login(ctx, next) {
     const userTable = await ctx.mongo.db().collection('user')
     const result = await userTable.find(ctx.request.body).toArray()
     let ret
-    if (result.length > 0) {
+
+    // session 存在时，直接登录
+    if (ctx.session.user) {
+        ret = {code: '1000', message: 'success'}
+    } else if (result.length > 0) {
         ret = {code: '1000', message: 'success'}
         ctx.session.user = result[0]._id
+        ctx.cookies.set('login', true, {
+            httpOnly: false,
+            maxAge: 'session',
+            signed: false,
+            overwrite: true
+        })
     } else {
         ret = {code: '1002', message: '用户或密码不存在'}
     }

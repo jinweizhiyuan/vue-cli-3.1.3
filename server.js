@@ -10,6 +10,8 @@ const io = require('socket.io')(server, {
     // origins: '*'
 });
 
+var ObjectId = require('mongodb').ObjectId
+
 const { makeResult } = require('./back-end/utils/common')
 app.keys = ['some secret hurr'];
 const CONFIG = {
@@ -82,6 +84,11 @@ io.on('connection', (socket) => {
             // app
             let userColt = await client.db().collection('user'),
                 groupUserClct = await client.db().collection('userMapGroup')
+
+            // session存在
+            if (socket.user) {
+                data = {_id: ObjectId(socket.user)}
+            }
             
             let result = await userColt.findOne(data, {
                 projection: {
@@ -106,7 +113,7 @@ io.on('connection', (socket) => {
                 socket.emit('init-login', ret)
 
                 // 获取在线用户
-                let users = await userColt.find({_id:{$ne:result._id}, online:1}, {projection:{userName:1, portrait:1}}).toArray()
+                let users = await userColt.find({_id:{$ne:ObjectId(result._id)}, online:1}, {projection:{userName:1, portrait:1}}).toArray()
                 socket.emit('sync-user', makeResult(users))
 
                 // 发送用户上线通知其他人
@@ -206,22 +213,12 @@ io.on('connection', (socket) => {
             if (!user) { // 登录超时或未消登录
                 socket.emit('timeout', makeResult(null, {code: '1002', message: '用户或密码不存在'}))
             }
+            socket.user = user
             next(user ? null : new Error('User not login'))
         }
     })
     
 })
-
-/* function createGroupSocket(group, user) {
-    
-    global.io.clients((error, clients) => {
-        console.log(clients)
-    })
-}
-global.socketObj = {
-    io,
-    socketMap
-} */
 
 app.use(sessionMiddleware);
 app.use(cors())
