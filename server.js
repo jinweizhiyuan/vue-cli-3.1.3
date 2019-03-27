@@ -1,6 +1,6 @@
 const Koa = require('koa');
 const static = require('koa-static')
-const cors = require('@koa/cors');
+// const cors = require('@koa/cors');
 const bodyParser = require('koa-body-parser');
 const mongoDriver = require('koa-mongo-driver')
 const session = require('koa-session')
@@ -221,7 +221,7 @@ io.on('connection', (socket) => {
 })
 
 app.use(sessionMiddleware);
-app.use(cors())
+// app.use(cors())
 app.use(static('dist'), {
     extensions: ['html', 'css', 'js', 'img', 'png']
 })

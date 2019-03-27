@@ -100,12 +100,14 @@ export default {
               errHandler(data)
             })
 
-            window.onbeforeunload = function() {
-              return "离开后用户将自动下线！";
+            window.onbeforeunload = function(e) {
+              (e || window.event).returnValue = "刷新页面后将自动跳转到登录页";
             }
 
             window.onunload = function() {
               socket.close();
+              // 增加刷新标志，防止chrome重新打开时使用缓存的数据
+              window.name = 'refresh'
             }
           });
       } else {
@@ -126,7 +128,7 @@ export default {
     ])
   },
   created() {
-    if (this.$cookie.get('login')) {
+    if (this.$cookie.get('login') && window.name == 'refresh') {
       this.login(true)
     }
   }

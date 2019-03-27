@@ -2,21 +2,26 @@
 
 async function login(ctx, next) {
     const userTable = await ctx.mongo.db().collection('user')
-    const result = await userTable.find(ctx.request.body).toArray()
+    const result = await userTable.findOne(ctx.request.body)
     let ret
 
     // session 存在时，直接登录
     if (ctx.session.user) {
         ret = {code: '1000', message: 'success'}
-    } else if (result.length > 0) {
-        ret = {code: '1000', message: 'success'}
-        ctx.session.user = result[0]._id
-        ctx.cookies.set('login', true, {
-            httpOnly: false,
-            maxAge: 'session',
-            signed: false,
-            overwrite: true
-        })
+    } else if (result) {
+        if (result.online == 0) {
+            ret = {code: '1000', message: 'success'}
+            ctx.session.user = result._id
+            ctx.cookies.set('login', true, {
+                httpOnly: false,
+                maxAge: 'session',
+                signed: false,
+                overwrite: true
+            })
+        } else {
+            ret = {code: '1004', message: '用户已登录'}
+        }
+        
     } else {
         ret = {code: '1002', message: '用户或密码不存在'}
     }
