@@ -1,4 +1,5 @@
 const { makeResult } = require('../utils/common')
+const ObjectId =  require('mongodb').ObjectId
 
 async function createGroup(ctx, next) {
     // TODO: 增加事务控制
@@ -111,6 +112,56 @@ async function createGroup(ctx, next) {
     next()
 }
 
+async function userList(ctx, next) {
+    let groupUserClct = await ctx.mongo.db().collection('userMapGroup')
+    let result = await groupUserClct.aggregate([
+        {
+            $match: {
+                group: ObjectId(ctx.request.body.id)
+            }
+        }, {
+            $project: {
+                user: {$toObjectId: '$user'}
+            }
+        }, {
+            $lookup: {
+                from: "user",
+                let: {group_user: "$user"},
+                pipeline: [
+                    {
+                        $match: {
+                                $expr: {
+                                    $eq: ["$_id", "$$group_user"]
+                                }
+                        }
+                    }, {
+                        $project: {
+                            userName: 1,
+                            portrait: 1
+                        }
+                    }
+                ],
+                as: "userInfo"
+            }
+        }, {
+            $replaceRoot: {
+                newRoot: {$arrayElemAt: ['$userInfo', 0]}
+            }
+        }
+    ])
+
+    result = await result.toArray()
+
+    let ret, opt
+
+    if (result.length) {
+        ret = result
+    } else {
+        opt = { code: '1005', message: '没有用户' }
+    }
+    ctx.response.body = makeResult(ret, opt)
+    next()
+}
 
 function joinGroup(group) {
     // 群内所有成员加入群组
@@ -124,5 +175,6 @@ function joinGroup(group) {
 }
 
 module.exports = {
-    'post /api/createGroup': createGroup
+    'post /api/createGroup': createGroup,
+    'post /api/groupUserList': userList
 }

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <x-header :title="user.userName" :left-options="{backText:''}" :right-options="{showMore:true}" @click-click-more="moreHandler" />
+    <x-header :title="user.userName" :left-options="{backText:''}" :right-options="{showMore:true}" @on-click-more="moreHandler" />
     <view-box class="view-box" ref="chatBody">
         <ul class="chat-list">
             <!-- <li>
@@ -57,7 +57,7 @@ export default {
     methods: {
         ...mapMutations(['add_message', 'update_user']),
         moreHandler() {
-            
+            this.$router.push({path: '/multi-part/message/groupDetail', query: this.$route.query})
         },
         sendMsg(val) {
             let msg = {
